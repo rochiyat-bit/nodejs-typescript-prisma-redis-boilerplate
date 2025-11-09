@@ -93,8 +93,12 @@ docker-compose up postgres redis -d
 # Generate Prisma client
 npm run prisma:generate
 
-# Run database migrations
-npm run prisma:migrate
+# Run database migrations and seed
+npm run db:setup
+
+# Or run them separately:
+# npm run prisma:migrate
+# npm run prisma:seed
 
 # Start development server
 npm run dev
@@ -112,12 +116,82 @@ npm run dev
 | `npm run test:coverage` | Run tests with coverage report |
 | `npm run prisma:generate` | Generate Prisma client |
 | `npm run prisma:migrate` | Run database migrations |
+| `npm run prisma:migrate:prod` | Run migrations in production |
+| `npm run prisma:migrate:reset` | Reset database and re-run migrations |
+| `npm run prisma:seed` | Seed database with sample data |
 | `npm run prisma:studio` | Open Prisma Studio |
+| `npm run db:setup` | Run migrations and seed database |
+| `npm run db:reset` | Reset database and seed |
 | `npm run docker:up` | Start Docker containers |
 | `npm run docker:down` | Stop Docker containers |
 | `npm run lint` | Lint code |
 | `npm run lint:fix` | Lint and fix code |
 | `npm run format` | Format code with Prettier |
+
+## Database Migrations & Seeding
+
+### Migrations
+
+This project uses Prisma Migrate for database schema management.
+
+#### Running Migrations
+
+```bash
+# Development - Run pending migrations
+npm run prisma:migrate
+
+# Production - Deploy migrations
+npm run prisma:migrate:prod
+
+# Reset database (⚠️ deletes all data)
+npm run prisma:migrate:reset
+```
+
+#### Creating New Migrations
+
+When you modify `prisma/schema.prisma`:
+
+```bash
+npx prisma migrate dev --name your_migration_name
+
+# Examples:
+# npx prisma migrate dev --name add_user_table
+# npx prisma migrate dev --name add_email_to_user
+```
+
+### Database Seeding
+
+The project includes a comprehensive seeding system that creates **25 sample todos** with realistic data.
+
+#### Running Seeds
+
+```bash
+# Seed database manually
+npm run prisma:seed
+
+# Setup database (migrate + seed)
+npm run db:setup
+
+# Reset and seed
+npm run db:reset
+```
+
+#### Seed Data Includes
+
+- ✅ **9 pending todos** - Not yet started
+- 🔄 **8 in-progress todos** - Currently being worked on
+- ✅ **8 completed todos** - Finished tasks
+- 🎯 **Mixed priorities** - Low, medium, and high priority items
+- 📅 **Various due dates** - Past, present, and future deadlines
+
+#### Customizing Seed Data
+
+Edit the seed data in:
+```
+prisma/seeders/todo.seeder.ts
+```
+
+For detailed migration and seeding documentation, see [MIGRATION_GUIDE.md](./MIGRATION_GUIDE.md).
 
 ## API Endpoints
 
